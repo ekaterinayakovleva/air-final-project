@@ -8,14 +8,14 @@ services:
       - 8000:80
 
   lb:
-    image: nginx:stable
     container_name: lb
-    volumes:
-      - ./lb/nginx.conf:/etc/nginx/nginx.conf:ro
+    image: jwilder/nginx-proxy
+    environment:
+      DEFAULT_HOST: inference.local
     ports:
-      - 8080:4000
-    depends_on:
-      - inference
+      - 8080:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
 
   inference:
     image: air/inference:latest
@@ -23,6 +23,7 @@ services:
       MONGO_URL: mongodb://root:root@mongo:27017
       MINIO_URL: minio:9000
       PROD: "true"
+      VIRTUAL_HOST: inference.local
     expose:
       - 8080
     volumes:
