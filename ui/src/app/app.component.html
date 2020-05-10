@@ -1,0 +1,19 @@
+<p-messages [(value)]="msgs"></p-messages>
+<div class="ui-g-12" style="text-align: center">
+    <h1>SemArt guide</h1>
+    <h4>Sample text for explaining how does this big and difficult system work</h4>
+</div>
+
+<div class="ui-g-12" style="text-align: center">
+    <input id="name" name="name" pInputText
+           required [(ngModel)]="searchString" #name="ngModel">
+
+    <button type="button" pButton (click)="onSearch()" label="Search" style="margin-left: 10px"></button>
+</div>
+
+<div *ngFor="let block of blocks">
+    <app-block
+            [url]="block.url"
+            [description]="block.description"
+    ></app-block>]
+</div>

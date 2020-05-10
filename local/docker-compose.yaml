@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  web:
+    image: air/frontend:latest
+    container_name: web
+    ports:
+      - 8000:80
+
+  lb:
+    image: nginx:stable
+    container_name: lb
+    volumes:
+      - ./lb/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:4000
+    depends_on:
+      - inference
+
+  inference:
+    image: air/inference:latest
+    environment:
+      MONGO_URL: mongodb://root:root@mongo:27017
+      MINIO_URL: minio:9000
+      PROD: "true"
+    expose:
+      - 8080
+    volumes:
+      - ./fs:/fs
+      - ./nltk_data:/home/app/nltk_data
+    links:
+      - mongo
+      - minio
+
+  mongo:
+    image: mongo:3.6.18-xenial
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+    volumes:
+      - ./mongo/mongodb:/home/mongodb
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    ports:
+      - 9000:9000
+    command: server /data
