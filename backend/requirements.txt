@@ -5,7 +5,7 @@ Flask==1.1.2
 Flask-Cors==3.0.8
 inference==0.1
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 joblib==0.14.1
 MarkupSafe==1.1.1
 minio==5.0.10
